@@ -1,0 +1,10 @@
+type: sqlite
+sqlite:
+  file: justfriend.db
+mysql:
+  host: localhost
+  port: 3306
+  database: justfriend
+  username: ""
+  password: ""
+  parameters: "useSSL=false&serverTimezone=Asia/Jakarta"

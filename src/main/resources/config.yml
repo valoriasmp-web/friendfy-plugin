@@ -1,0 +1,72 @@
+locale: id_ID
+survival-world: auto
+disabled-worlds: []
+bedrock-name-prefix: "."
+
+world-detection:
+  enabled: true
+  excluded-keywords: [lobby, hub, spawn, limbo]
+  preferred-keywords: [survival, overworld, world]
+  expected-worldborder-size: 30000
+  require-normal-environment: true
+
+npc:
+  enabled: true
+  citizens-id: 12
+
+never-alone:
+  enabled: true
+  notification-delay: 600
+  notification-cooldown: 3600
+
+buddy:
+  default-duration: 3600
+  reconnect-grace: 600
+  warning-distance: 250
+  lost-distance: 500
+  death-waypoint-seconds: 600
+  compass: true
+  tp-enabled: true
+  tp-cooldown: 120
+  tp-countdown: 5
+  combat-seconds: 15
+
+# Pemain boleh bergerak selama countdown RTP awal maupun Buddy TP.
+teleport:
+  cancel-on-move: false
+  cancel-on-damage: true
+
+tracking:
+  actionbar: true
+  interval-ticks: 20
+  simple-bedrock-format: true
+
+safe-rtp:
+  min-radius: 500
+  max-radius: 7000
+  max-attempts: 200
+  allow-water: false
+  require-generated-chunk: true
+  loaded-chunk-fallback: true
+  pair-spacing: 3
+  unsafe-blocks:
+    - LAVA
+    - MAGMA_BLOCK
+    - CACTUS
+    - FIRE
+    - SOUL_FIRE
+    - POWDER_SNOW
+    - SWEET_BERRY_BUSH
+
+matchmaking:
+  interval-ticks: 100
+  offer-timeout-seconds: 30
+  newbie-playtime-hours: 5
+  expansion-low-progress-seconds: 30
+  expansion-volunteer-seconds: 60
+
+waiting-area:
+  enabled: true
+  world: lobby
+
+debug: false

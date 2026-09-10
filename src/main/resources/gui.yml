@@ -1,0 +1,28 @@
+main:
+  title: "FRIENDFY - CARI TEMAN"
+  size: 27
+  quick-match-slot: 11
+  activity-slot: 13
+  settings-slot: 15
+  volunteer-slot: 17
+  status-slot: 22
+activities:
+  title: "PILIH AKTIVITAS"
+  values:
+    - SURVIVAL
+    - MINING
+    - BUILDING
+    - EXPLORING
+    - FARMING
+    - FISHING
+    - DUNGEON
+    - HUNTING
+    - SANTAI
+    - BUTUH_BANTUAN
+settings:
+  title: "FRIENDFY - SETTINGS"
+match:
+  title: "FRIENDFY - MATCH FOUND"
+  accept-slot: 11
+  player-slot: 13
+  decline-slot: 15
