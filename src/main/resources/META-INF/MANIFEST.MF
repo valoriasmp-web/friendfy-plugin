@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Implementation-Title: Friendfy
+Implementation-Version: 1.1.2
+Built-For: Paper 1.21.11+

@@ -1,0 +1,11 @@
+scores:
+  same-activity: 40
+  similar-progress: 20
+  same-world: 15
+  both-newbie: 15
+  near-distance: 10
+  never-matched: 10
+  volunteer-after-expansion: 25
+  previous-decline: -40
+  previous-buddy: -15
+

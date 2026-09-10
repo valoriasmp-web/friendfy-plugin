@@ -1,0 +1,68 @@
+name: Friendfy
+version: 1.1.2
+main: id.valoria.justfriend.JustFriendPlugin
+api-version: '1.21'
+authors: [ValoriaSMP]
+description: Java and Bedrock-safe friend matchmaking for Paper.
+softdepend: [BetterTeams, Marry2026, BetterRTP, PlaceholderAPI, Citizens, floodgate, Geyser-Spigot, WorldGuard, GriefPrevention]
+libraries:
+  - org.xerial:sqlite-jdbc:3.49.1.0
+  - org.mariadb.jdbc:mariadb-java-client:3.5.6
+commands:
+  friendfy:
+    aliases: [fr, justfriend, jf, friendfinder]
+    description: Open the Friendfy menu
+    usage: /fr
+permissions:
+  friendfy.player:
+    description: Semua permission dasar pemain Friendfy
+    default: true
+    children:
+      friendfy.use: true
+      friendfy.match: true
+      friendfy.tp: true
+      friendfy.volunteer: true
+      friendfy.block: true
+      friendfy.settings: true
+  friendfy.use:
+    default: true
+  friendfy.match:
+    default: true
+  friendfy.tp:
+    default: true
+  friendfy.volunteer:
+    default: true
+  friendfy.block:
+    default: true
+  friendfy.settings:
+    default: true
+  friendfy.admin:
+    default: op
+    children:
+      friendfy.admin.reload: true
+      friendfy.admin.queue: true
+      friendfy.admin.sessions: true
+      friendfy.admin.end: true
+      friendfy.admin.debug: true
+  friendfy.admin.reload:
+    default: op
+  friendfy.admin.queue:
+    default: op
+  friendfy.admin.sessions:
+    default: op
+  friendfy.admin.end:
+    default: op
+  friendfy.admin.debug:
+    default: op
+  justfriend.use:
+    default: false
+    children: {friendfy.use: true}
+  justfriend.match:
+    default: false
+    children: {friendfy.match: true}
+  justfriend.tp:
+    default: false
+    children: {friendfy.tp: true}
+  justfriend.admin:
+    default: false
+    children: {friendfy.admin: true}
