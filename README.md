@@ -6,7 +6,7 @@ Plugin matchmaking teman untuk Paper 1.21.11+, Java Edition dan Bedrock melalui 
 
 1. Gunakan Java 21 untuk menjalankan Paper 1.21.11.
 2. Hapus JAR Friendfy/JustFriend versi lama, lalu masukkan `Friendfy-1.1.2.jar` ke folder `plugins`.
-3. BetterTeams 5.0.0, Marry2026 2.0.0, BetterRTP 3.6.13, Floodgate, Citizens, PlaceholderAPI, WorldGuard, dan GriefPrevention bersifat opsional.
+3. BetterTeams, Marry2026, BetterRTP 3.6.13, Floodgate, Citizens, PlaceholderAPI, WorldGuard, dan GriefPrevention bersifat opsional.
 4. Restart server. Jangan memakai `/reload` Bukkit.
 5. World Survival dideteksi otomatis. Radius RTP, NPC ID, message, dan GUI tetap dapat diubah dalam folder `plugins/Friendfy/` jika diperlukan.
 
