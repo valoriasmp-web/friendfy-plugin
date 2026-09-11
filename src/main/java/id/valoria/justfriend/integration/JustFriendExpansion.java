@@ -20,7 +20,9 @@ public final class JustFriendExpansion extends PlaceholderExpansion {
         BuddySession s=plugin.getSessions().getSession(player.getUniqueId());
         if(id.equals("buddy")){if(s==null)return "";Player buddy=Bukkit.getPlayer(s.other(player.getUniqueId()));return buddy==null?"Offline":buddy.getName();}
         if(id.equals("buddy_distance")){if(s==null)return "0";Player buddy=Bukkit.getPlayer(s.other(player.getUniqueId()));return buddy!=null&&buddy.getWorld().equals(player.getWorld())?String.valueOf((int)Math.round(player.getLocation().distance(buddy.getLocation()))):"-";}
-        if(id.equals("status")){if(s!=null)return "BUDDY";if(plugin.getMatchmaking().isQueued(player.getUniqueId()))return "LOOKING";if(plugin.settings(player.getUniqueId()).dnd)return "DND";return "AVAILABLE";}
+        if(id.equals("group_size"))return s==null?"0":String.valueOf(s.size());
+        if(id.equals("group_leader")){if(s==null)return "";String name=Bukkit.getOfflinePlayer(s.leader()).getName();return name==null?"Unknown":name;}
+        if(id.equals("status")){if(s!=null)return s.size()>2?"GROUP":"BUDDY";if(plugin.getMatchmaking().isQueued(player.getUniqueId()))return "LOOKING";if(plugin.settings(player.getUniqueId()).dnd)return "DND";return "AVAILABLE";}
         if(id.equals("social_level"))return String.valueOf(plugin.settings(player.getUniqueId()).socialXp/100+1);
         return null;
     }

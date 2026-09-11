@@ -1,11 +1,13 @@
 main:
   title: "FRIENDFY - CARI TEMAN"
   size: 27
+  group-slot: 10
   quick-match-slot: 11
   activity-slot: 13
   settings-slot: 15
   volunteer-slot: 17
   status-slot: 22
+  guide-slot: 23
 activities:
   title: "PILIH AKTIVITAS"
   values:
@@ -26,3 +28,7 @@ match:
   accept-slot: 11
   player-slot: 13
   decline-slot: 15
+group:
+  title: "FRIENDFY - GRUP"
+  invite-title: "FRIENDFY - UNDANG"
+  offer-title: "FRIENDFY - UNDANGAN GRUP"

@@ -1,5 +1,5 @@
 name: Friendfy
-version: 1.1.2
+version: 1.2.0
 main: id.valoria.justfriend.JustFriendPlugin
 api-version: '1.21'
 authors: [ValoriaSMP]
@@ -24,6 +24,8 @@ permissions:
       friendfy.volunteer: true
       friendfy.block: true
       friendfy.settings: true
+      friendfy.group: true
+      friendfy.guide: true
   friendfy.use:
     default: true
   friendfy.match:
@@ -35,6 +37,10 @@ permissions:
   friendfy.block:
     default: true
   friendfy.settings:
+    default: true
+  friendfy.group:
+    default: true
+  friendfy.guide:
     default: true
   friendfy.admin:
     default: op

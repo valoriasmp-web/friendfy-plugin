@@ -29,7 +29,9 @@ public final class JustFriendCommand implements CommandExecutor, TabCompleter {
             case "block": block(p,args,true);break;
             case "unblock": block(p,args,false);break;
             case "tp": if(args.length>1&&args[1].equalsIgnoreCase("accept"))plugin.getSessions().answerTeleport(p,true);else if(args.length>1&&args[1].equalsIgnoreCase("deny"))plugin.getSessions().answerTeleport(p,false);else plugin.getSessions().requestTeleport(p);break;
-            case "end": plugin.getSessions().endByPlayer(p.getUniqueId(),"player-ended");break;
+            case "group": group(p,args);break;
+            case "guide": if(p.hasPermission("friendfy.guide"))plugin.getGui().openGuide(p);else plugin.getMessages().send(p,"no-permission");break;
+            case "end": plugin.getSessions().leaveGroup(p);break;
             case "later": PlayerSettings later=plugin.settings(p.getUniqueId());later.lastNotice=System.currentTimeMillis();plugin.saveSettings(p.getUniqueId());break;
             case "never": PlayerSettings never=plugin.settings(p.getUniqueId());never.neverAlone=false;plugin.saveSettings(p.getUniqueId());plugin.getMessages().send(p,"settings-saved");break;
             case "admin": admin(p,args);break;
@@ -46,12 +48,25 @@ public final class JustFriendCommand implements CommandExecutor, TabCompleter {
         plugin.setBlocked(p.getUniqueId(),target.getUniqueId(),value);plugin.getMessages().send(p,value?"blocked":"unblocked",Map.of("player",target.getName()==null?args[1]:target.getName()));
     }
 
+    private void group(Player p,String[] args){
+        if(!p.hasPermission("friendfy.group")){plugin.getMessages().send(p,"no-permission");return;}
+        if(args.length==1){plugin.getGui().openGroup(p);return;}
+        switch(args[1].toLowerCase(Locale.ROOT)){
+            case "invite": if(args.length<3){plugin.getGui().openGroupCandidates(p,0);break;}Player target=Bukkit.getPlayerExact(args[2]);plugin.getSessions().inviteToGroup(p,target);break;
+            case "accept": plugin.getSessions().answerGroupInvite(p,true);break;
+            case "decline": plugin.getSessions().answerGroupInvite(p,false);break;
+            case "leave": plugin.getSessions().leaveGroup(p);break;
+            case "kick": if(args.length>2){Player kicked=Bukkit.getPlayerExact(args[2]);if(kicked!=null)plugin.getSessions().removeGroupMember(p,kicked.getUniqueId());}break;
+            default: plugin.getGui().openGroup(p);
+        }
+    }
+
     private void admin(Player p,String[] args){
         if(!p.hasPermission("friendfy.admin")){plugin.getMessages().send(p,"no-permission");return;}if(args.length==1){plugin.getGui().openAdmin(p);return;}
         switch(args[1].toLowerCase(Locale.ROOT)){
             case "status": p.sendMessage("§dFriendfy §fQueue: §d"+plugin.getMatchmaking().size()+" §fSessions: §d"+plugin.getSessions().count()+" §fDB: "+(plugin.getDatabase().isReady()?"§aOK":"§cOFF"));p.sendMessage("§7Target RTP otomatis: §f"+plugin.getSessions().getResolvedWorldName(p));plugin.getIntegrations().status().forEach((k,v)->p.sendMessage((v?"§a✔ ":"§c✘ ")+k));break;
             case "queue": if(!p.hasPermission("friendfy.admin.queue"))break;for(QueueEntry e:plugin.getMatchmaking().entries()){OfflinePlayer op=Bukkit.getOfflinePlayer(e.playerId);p.sendMessage("§7- §f"+(op.getName()==null?e.playerId:op.getName())+" §d"+e.activity.display());}break;
-            case "sessions": if(!p.hasPermission("friendfy.admin.sessions"))break;for(BuddySession s:plugin.getSessions().sessions())p.sendMessage("§7- §f"+name(s.first)+" §d+ §f"+name(s.second)+" §7("+s.activity.display()+")");break;
+            case "sessions": if(!p.hasPermission("friendfy.admin.sessions"))break;for(BuddySession s:plugin.getSessions().sessions())p.sendMessage("§7- §f"+String.join(" §d+ §f",s.members().stream().map(this::name).toList())+" §7("+s.activity.display()+")");break;
             case "end": if(p.hasPermission("friendfy.admin.end")&&args.length>2){Player target=Bukkit.getPlayerExact(args[2]);if(target!=null)plugin.getSessions().endByPlayer(target.getUniqueId(),"admin-ended");}break;
             case "debug": if(p.hasPermission("friendfy.admin.debug")&&args.length>2){Player target=Bukkit.getPlayerExact(args[2]);if(target!=null)debug(p,target);}break;
             case "reload": if(p.hasPermission("friendfy.admin.reload")){plugin.reloadAll();plugin.getMessages().send(p,"reloaded");}break;
@@ -62,9 +77,11 @@ public final class JustFriendCommand implements CommandExecutor, TabCompleter {
     private String name(UUID id){String n=Bukkit.getOfflinePlayer(id).getName();return n==null?id.toString():n;}
 
     @Override public List<String> onTabComplete(CommandSender sender,Command command,String alias,String[] args){
-        if(args.length==1)return partial(args[0],List.of("queue","cancel","accept","decline","settings","volunteer","block","unblock","tp","end","admin"));
+        if(args.length==1)return partial(args[0],List.of("queue","cancel","accept","decline","settings","volunteer","block","unblock","tp","group","guide","end","admin"));
         if(args.length==2&&args[0].equalsIgnoreCase("queue"))return partial(args[1],Arrays.stream(id.valoria.justfriend.model.Activity.values()).map(Enum::name).toList());
         if(args.length==2&&args[0].equalsIgnoreCase("tp"))return partial(args[1],List.of("accept","deny"));
+        if(args.length==2&&args[0].equalsIgnoreCase("group"))return partial(args[1],List.of("invite","accept","decline","leave","kick"));
+        if(args.length==3&&args[0].equalsIgnoreCase("group")&&(args[1].equalsIgnoreCase("invite")||args[1].equalsIgnoreCase("kick")))return partial(args[2],Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
         if(args.length==2&&args[0].equalsIgnoreCase("admin"))return partial(args[1],List.of("status","queue","sessions","end","debug","reload"));
         return Collections.emptyList();
     }

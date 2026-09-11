@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.0
+
+- Menambahkan Grup Buddy persisten dengan kapasitas maksimal 4 pemain.
+- Menu Grup hanya muncul setelah dua pemain saling accept, tepat di kiri Compass pada GUI utama.
+- GUI anggota, daftar kandidat online, undangan Accept/Decline, keluar grup, kick anggota, dan pergantian ketua otomatis.
+- Anggota baru diteleport aman ke dekat grup; movement tidak membatalkan countdown.
+- ActionBar dan Buddy Compass kini melacak anggota grup terdekat.
+- Menambahkan buku Panduan Friendfy yang terbuka langsung dari GUI tanpa masuk inventory, di kanan Clock.
+- Menambahkan `/fr group`, `/fr guide`, permission default, placeholder grup, dan migrasi konfigurasi/data lama.
+
 ## 1.1.2
 
 - World Survival dideteksi otomatis tanpa perlu mengisi nama world.

@@ -53,6 +53,7 @@ public final class Database implements AutoCloseable {
                 s.executeUpdate("CREATE TABLE IF NOT EXISTS jf_players (uuid VARCHAR(36) PRIMARY KEY, never_alone INT NOT NULL, requests INT NOT NULL, volunteer INT NOT NULL, tracker INT NOT NULL, compass INT NOT NULL, buddy_tp INT NOT NULL, sound INT NOT NULL, dnd INT NOT NULL, social_xp INT NOT NULL, reputation INT NOT NULL, last_notice BIGINT NOT NULL)");
                 s.executeUpdate("CREATE TABLE IF NOT EXISTS jf_blocks (owner_uuid VARCHAR(36) NOT NULL, target_uuid VARCHAR(36) NOT NULL, PRIMARY KEY(owner_uuid,target_uuid))");
                 s.executeUpdate("CREATE TABLE IF NOT EXISTS jf_sessions (session_id VARCHAR(36) PRIMARY KEY, first_uuid VARCHAR(36) NOT NULL, second_uuid VARCHAR(36) NOT NULL, activity VARCHAR(32) NOT NULL, started_at BIGINT NOT NULL, ends_at BIGINT NOT NULL, world VARCHAR(128), x DOUBLE, y DOUBLE, z DOUBLE, first_disconnected BIGINT NOT NULL, second_disconnected BIGINT NOT NULL, active INT NOT NULL)");
+                s.executeUpdate("CREATE TABLE IF NOT EXISTS jf_session_members (session_id VARCHAR(36) NOT NULL, member_uuid VARCHAR(36) NOT NULL, joined_at BIGINT NOT NULL, disconnected_at BIGINT NOT NULL, member_order INT NOT NULL, is_leader INT NOT NULL, PRIMARY KEY(session_id,member_uuid))");
                 s.executeUpdate("CREATE TABLE IF NOT EXISTS jf_history (session_id VARCHAR(36) PRIMARY KEY, first_uuid VARCHAR(36) NOT NULL, second_uuid VARCHAR(36) NOT NULL, started_at BIGINT NOT NULL, ended_at BIGINT NOT NULL, activity VARCHAR(32), reason VARCHAR(64))");
                 ready = true;
             } catch (SQLException e) {
@@ -141,12 +142,27 @@ public final class Database implements AutoCloseable {
             String sql = url.startsWith("jdbc:mariadb")
                     ? "REPLACE INTO jf_sessions(session_id,first_uuid,second_uuid,activity,started_at,ends_at,world,x,y,z,first_disconnected,second_disconnected,active) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)"
                     : "INSERT OR REPLACE INTO jf_sessions(session_id,first_uuid,second_uuid,activity,started_at,ends_at,world,x,y,z,first_disconnected,second_disconnected,active) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
-            try (Connection c = connection(); PreparedStatement p = c.prepareStatement(sql)) {
-                p.setString(1, s.id.toString()); p.setString(2, s.first.toString()); p.setString(3, s.second.toString());
-                p.setString(4, s.activity.name()); p.setLong(5, s.startedAt); p.setLong(6, s.endsAt);
-                Location l = s.origin; p.setString(7, l == null || l.getWorld() == null ? null : l.getWorld().getName());
-                p.setDouble(8, l == null ? 0 : l.getX()); p.setDouble(9, l == null ? 0 : l.getY()); p.setDouble(10, l == null ? 0 : l.getZ());
-                p.setLong(11, s.firstDisconnectedAt); p.setLong(12, s.secondDisconnectedAt); p.setInt(13, s.active ? 1 : 0); p.executeUpdate();
+            try (Connection c = connection()) {
+                c.setAutoCommit(false);
+                try (PreparedStatement p = c.prepareStatement(sql)) {
+                    p.setString(1, s.id.toString()); p.setString(2, s.first.toString()); p.setString(3, s.second.toString());
+                    p.setString(4, s.activity.name()); p.setLong(5, s.startedAt); p.setLong(6, s.endsAt);
+                    Location l = s.origin; p.setString(7, l == null || l.getWorld() == null ? null : l.getWorld().getName());
+                    p.setDouble(8, l == null ? 0 : l.getX()); p.setDouble(9, l == null ? 0 : l.getY()); p.setDouble(10, l == null ? 0 : l.getZ());
+                    p.setLong(11, s.disconnectedAt(s.first)); p.setLong(12, s.disconnectedAt(s.second)); p.setInt(13, s.active ? 1 : 0); p.executeUpdate();
+                }
+                try (PreparedStatement p = c.prepareStatement("DELETE FROM jf_session_members WHERE session_id=?")) {
+                    p.setString(1, s.id.toString()); p.executeUpdate();
+                }
+                try (PreparedStatement p = c.prepareStatement("INSERT INTO jf_session_members(session_id,member_uuid,joined_at,disconnected_at,member_order,is_leader) VALUES(?,?,?,?,?,?)")) {
+                    int order = 0;
+                    for (UUID member : s.members()) {
+                        p.setString(1, s.id.toString()); p.setString(2, member.toString()); p.setLong(3, s.startedAt);
+                        p.setLong(4, s.disconnectedAt(member)); p.setInt(5, order++); p.setInt(6, s.isLeader(member) ? 1 : 0); p.addBatch();
+                    }
+                    p.executeBatch();
+                }
+                c.commit();
             }
         });
     }
@@ -155,13 +171,28 @@ public final class Database implements AutoCloseable {
         return CompletableFuture.supplyAsync(() -> {
             List<BuddySession> result = new ArrayList<>();
             if (!ready) return result;
-            try (Connection c = connection(); PreparedStatement p = c.prepareStatement("SELECT * FROM jf_sessions WHERE active=1"); ResultSet r = p.executeQuery()) {
-                while (r.next()) {
-                    BuddySession s = new BuddySession(UUID.fromString(r.getString("session_id")), UUID.fromString(r.getString("first_uuid")), UUID.fromString(r.getString("second_uuid")), Activity.parse(r.getString("activity")), r.getLong("started_at"), r.getLong("ends_at"));
-                    World world = worldSync(r.getString("world"));
-                    if (world != null) s.origin = new Location(world, r.getDouble("x"), r.getDouble("y"), r.getDouble("z"));
-                    s.firstDisconnectedAt = r.getLong("first_disconnected"); s.secondDisconnectedAt = r.getLong("second_disconnected");
-                    result.add(s);
+            try (Connection c = connection()) {
+                try (PreparedStatement p = c.prepareStatement("SELECT * FROM jf_sessions WHERE active=1"); ResultSet r = p.executeQuery()) {
+                    while (r.next()) {
+                        BuddySession s = new BuddySession(UUID.fromString(r.getString("session_id")), UUID.fromString(r.getString("first_uuid")), UUID.fromString(r.getString("second_uuid")), Activity.parse(r.getString("activity")), r.getLong("started_at"), r.getLong("ends_at"));
+                        World world = worldSync(r.getString("world"));
+                        if (world != null) s.origin = new Location(world, r.getDouble("x"), r.getDouble("y"), r.getDouble("z"));
+                        s.disconnectedAt(s.first, r.getLong("first_disconnected")); s.disconnectedAt(s.second, r.getLong("second_disconnected"));
+                        result.add(s);
+                    }
+                }
+                try (PreparedStatement p = c.prepareStatement("SELECT member_uuid,disconnected_at,is_leader FROM jf_session_members WHERE session_id=? ORDER BY member_order")) {
+                    for (BuddySession session : result) {
+                        List<UUID> members = new ArrayList<>(); Map<UUID,Long> disconnected = new LinkedHashMap<>(); UUID leader = null;
+                        p.setString(1, session.id.toString());
+                        try (ResultSet r = p.executeQuery()) {
+                            while (r.next()) {
+                                UUID member = UUID.fromString(r.getString("member_uuid")); members.add(member);
+                                disconnected.put(member, r.getLong("disconnected_at")); if (r.getInt("is_leader") != 0) leader = member;
+                            }
+                        }
+                        if (members.size() >= 2) session.restoreMembers(members, leader, disconnected);
+                    }
                 }
             } catch (SQLException | IllegalArgumentException e) { log("load sessions", e); }
             return result;

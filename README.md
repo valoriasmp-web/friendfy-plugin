@@ -1,11 +1,11 @@
-# Friendfy 1.1.2
+# Friendfy 1.2.0
 
 Plugin matchmaking teman untuk Paper 1.21.11+, Java Edition dan Bedrock melalui Geyser/Floodgate.
 
 ## Instalasi
 
 1. Gunakan Java 21 untuk menjalankan Paper 1.21.11.
-2. Hapus JAR Friendfy/JustFriend versi lama, lalu masukkan `Friendfy-1.1.2.jar` ke folder `plugins`.
+2. Hapus JAR Friendfy/JustFriend versi lama, lalu masukkan `Friendfy-1.2.0.jar` ke folder `plugins`.
 3. BetterTeams 5.0.0, Marry2026 2.0.0, BetterRTP 3.6.13, Floodgate, Citizens, PlaceholderAPI, WorldGuard, dan GriefPrevention bersifat opsional.
 4. Restart server. Jangan memakai `/reload` Bukkit.
 5. World Survival dideteksi otomatis. Radius RTP, NPC ID, message, dan GUI tetap dapat diubah dalam folder `plugins/Friendfy/` jika diperlukan.
@@ -28,8 +28,14 @@ Semua command pemain otomatis tersedia melalui permission bawaan `friendfy.playe
 - `/fr volunteer` — aktif/nonaktif Volunteer Buddy.
 - `/fr tp` — minta teleport ke buddy.
 - `/fr tp accept|deny` — jawab permintaan Buddy TP.
+- `/fr group` — buka Grup Buddy setelah dua pemain menerima match.
+- `/fr group invite [player]` — buka pilihan pemain atau kirim undangan langsung.
+- `/fr group accept|decline` — jawaban cadangan melalui command.
+- `/fr group leave` — keluar dari grup; ketua otomatis berpindah bila anggota masih cukup.
+- `/fr group kick <player>` — ketua mengeluarkan anggota.
+- `/fr guide` — membuka buku panduan langsung tanpa memberikan item buku.
 - `/fr block <player>` dan `/fr unblock <player>`.
-- `/fr end` — akhiri Buddy Session.
+- `/fr end` — keluar dari Grup Buddy; sesi dua pemain akan diakhiri.
 
 Alias lama `/justfriend`, `/jf`, dan `/friendfinder` tetap tersedia agar NPC/config lama tidak langsung rusak.
 
@@ -57,6 +63,12 @@ Ketiga JAR referensi tidak dimodifikasi.
 
 SafeRTP tidak membuat chunk baru bila `safe-rtp.require-generated-chunk: true`. Pencarian dibatasi worldborder dan menolak lava, void, air (default), powder snow, cactus, blok tertutup, serta lokasi yang ditolak validator integrasi.
 
+## Grup Buddy
+
+Menu Grup baru muncul pada slot kiri Compass di GUI utama setelah dua pemain saling accept dan Buddy Session berhasil dimulai. Setiap anggota dapat mengundang pemain online yang tersedia melalui GUI. Undangan memakai GUI Accept/Decline untuk Java dan Bedrock, kapasitas dikunci maksimal 4 pemain, dan anggota baru diteleport secara aman ke dekat grup. Data anggota serta ketua disimpan di SQLite/MariaDB dan dipulihkan setelah restart.
+
+Buku Panduan berada di slot kanan Clock pada GUI utama. Buku dibuka langsung melalui antarmuka Minecraft dan tidak dimasukkan ke inventory pemain.
+
 ## PlaceholderAPI
 
 - `%friendfy_queue%`
@@ -64,6 +76,8 @@ SafeRTP tidak membuat chunk baru bila `safe-rtp.require-generated-chunk: true`. 
 - `%friendfy_buddy%`
 - `%friendfy_buddy_distance%`
 - `%friendfy_status%`
+- `%friendfy_group_size%`
+- `%friendfy_group_leader%`
 - `%friendfy_social_level%`
 - `%friendfy_volunteers%`
 

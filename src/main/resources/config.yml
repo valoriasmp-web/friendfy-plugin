@@ -31,6 +31,12 @@ buddy:
   tp-countdown: 5
   combat-seconds: 15
 
+group:
+  enabled: true
+  max-members: 4
+  invite-timeout-seconds: 30
+  teleport-new-member: true
+
 # Pemain boleh bergerak selama countdown RTP awal maupun Buddy TP.
 teleport:
   cancel-on-move: false
