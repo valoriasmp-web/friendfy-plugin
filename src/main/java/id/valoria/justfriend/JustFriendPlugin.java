@@ -53,7 +53,11 @@ public final class JustFriendPlugin extends JavaPlugin implements JustFriendAPI 
             if(changed)current.save(target);
         }catch(IOException e){getLogger().warning("Gagal memperbarui default "+name+": "+e.getMessage());}
     }
-    private void loadExtraConfigs(){guiConfig=YamlConfiguration.loadConfiguration(new File(getDataFolder(),"gui.yml"));matchConfig=YamlConfiguration.loadConfiguration(new File(getDataFolder(),"matchmaking.yml"));}
+    private void loadExtraConfigs(){
+        File guiFile=new File(getDataFolder(),"gui.yml");guiConfig=YamlConfiguration.loadConfiguration(guiFile);
+        if(guiConfig.getInt("main.group-slot",9)==10){guiConfig.set("main.group-slot",9);try{guiConfig.save(guiFile);}catch(IOException e){getLogger().warning("Gagal memigrasikan slot Grup: "+e.getMessage());}}
+        matchConfig=YamlConfiguration.loadConfiguration(new File(getDataFolder(),"matchmaking.yml"));
+    }
     public void reloadAll(){reloadConfig();loadExtraConfigs();messages.reload();safeRtp.reload();sessions.resetWorldDetection();}
     public void loadPlayer(Player player){UUID id=player.getUniqueId();settings.putIfAbsent(id,new PlayerSettings());blocks.putIfAbsent(id,ConcurrentHashMap.newKeySet());database.loadSettings(id).thenAccept(s->Bukkit.getScheduler().runTask(this,()->settings.put(id,s)));database.loadBlocks(id).thenAccept(b->Bukkit.getScheduler().runTask(this,()->{Set<UUID> set=ConcurrentHashMap.newKeySet();set.addAll(b);blocks.put(id,set);}));}
     public PlayerSettings settings(UUID id){return settings.computeIfAbsent(id,k->new PlayerSettings());}

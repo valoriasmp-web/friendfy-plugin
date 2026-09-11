@@ -4,6 +4,7 @@
 
 - Memindahkan menu Grup Buddy ke slot 9 paling kiri.
 - Membiarkan slot 10 kosong sebelum Quick Match Compass agar jarak antarmenu konsisten dan rapi.
+- Memigrasikan otomatis `main.group-slot: 10` dari konfigurasi versi 1.2.0 menjadi slot 9.
 
 ## 1.2.0
 
