@@ -16,7 +16,7 @@ rtp-world-missing: "&cWorld Survival tidak berhasil dideteksi. Cek daftar world 
 countdown-title: "&d&lADVENTURE PARTNER FOUND"
 countdown-subtitle: "&f{player} &7- mulai dalam &d{seconds} &7detik"
 session-started: "&aBuddy Session dimulai bersama &f{player}&a."
-group-unlocked: "&dMenu Grup terbuka! &fGunakan /fr lalu klik ikon di kiri Compass."
+group-unlocked: "&dMenu Grup terbuka! &fGunakan /fr lalu klik ikon paling kiri."
 group-locked: "&eMenu Grup baru terbuka setelah dua pemain saling menerima match."
 group-full: "&cGrup sudah penuh. Maksimal 4 pemain."
 group-target-unavailable: "&ePemain itu sedang tidak tersedia untuk bergabung."

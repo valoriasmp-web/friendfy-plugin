@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1
+
+- Memindahkan menu Grup Buddy ke slot 9 paling kiri.
+- Membiarkan slot 10 kosong sebelum Quick Match Compass agar jarak antarmenu konsisten dan rapi.
+
 ## 1.2.0
 
 - Menambahkan Grup Buddy persisten dengan kapasitas maksimal 4 pemain.

@@ -1,7 +1,7 @@
 main:
   title: "FRIENDFY - CARI TEMAN"
   size: 27
-  group-slot: 10
+  group-slot: 9
   quick-match-slot: 11
   activity-slot: 13
   settings-slot: 15

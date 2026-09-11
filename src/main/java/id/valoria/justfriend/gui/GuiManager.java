@@ -33,7 +33,7 @@ public final class GuiManager {
         Inventory inv = Bukkit.createInventory(null, cfg.getInt("main.size", 27), Text.color(cfg.getString("main.title", "FRIENDFY - CARI TEMAN")));
         fill(inv);
         inv.setItem(cfg.getInt("main.quick-match-slot", 11), item(Material.COMPASS, "&d&lQuick Match", "&7Cari teman terbaik secara otomatis.", "&eKlik untuk mulai"));
-        if (player.hasPermission("friendfy.group") && plugin.getConfig().getBoolean("group.enabled", true) && plugin.getSessions().hasSession(player.getUniqueId())) inv.setItem(cfg.getInt("main.group-slot", 10), item(Material.PLAYER_HEAD, "&d&lGrup Buddy", "&7Kelola grup maksimal 4 pemain.", "&eKlik untuk membuka"));
+        if (player.hasPermission("friendfy.group") && plugin.getConfig().getBoolean("group.enabled", true) && plugin.getSessions().hasSession(player.getUniqueId())) inv.setItem(cfg.getInt("main.group-slot", 9), item(Material.PLAYER_HEAD, "&d&lGrup Buddy", "&7Kelola grup maksimal 4 pemain.", "&eKlik untuk membuka"));
         inv.setItem(cfg.getInt("main.activity-slot", 13), item(Material.MAP, "&b&lPilih Aktivitas", "&7Mining, building, exploring,", "&7dungeon, santai, dan lainnya."));
         inv.setItem(cfg.getInt("main.settings-slot", 15), item(Material.COMPARATOR, "&e&lPengaturan", "&7Atur privasi dan tracker."));
         boolean volunteer = plugin.settings(player.getUniqueId()).volunteer;
@@ -103,7 +103,7 @@ public final class GuiManager {
         pages.add("&d&lQUICK MATCH\n\n&0Klik Compass untuk masuk antrean otomatis.\n\n&0Gunakan menu Aktivitas jika ingin mencari teman untuk mining, building, dungeon, atau aktivitas lain.");
         pages.add("&d&lACCEPT MATCH\n\n&0Kedua pemain harus menerima. Bedrock mendapat GUI, Java mendapat tombol chat.\n\n&0Jika ditolak atau expired, pencarian dapat dilanjutkan.");
         pages.add("&d&lSAFE RTP\n\n&0Setelah dua pemain accept, Friendfy mencari dua titik aman berdekatan di world Survival.\n\n&0Bergerak tidak membatalkan countdown.");
-        pages.add("&d&lGRUP BUDDY\n\n&0Menu Grup muncul di kiri Compass setelah sesi dimulai.\n\n&0Undang pemain sampai maksimal 4 anggota. Undangan dijawab melalui GUI.");
+        pages.add("&d&lGRUP BUDDY\n\n&0Menu Grup muncul paling kiri setelah sesi dimulai. Ada satu slot kosong sebelum Compass.\n\n&0Undang pemain sampai maksimal 4 anggota.");
         pages.add("&d&lTRACKER\n\n&0ActionBar menunjukkan nama, jarak, arah, dan beda ketinggian anggota terdekat.\n\n&0Buddy Compass menunjuk ke anggota grup terdekat.");
         pages.add("&d&lBUDDY TP\n\n&0Gunakan &d/fr tp &0untuk meminta teleport ke ketua/anggota.\n\n&0Tujuan harus menerima dengan &d/fr tp accept&0.");
         pages.add("&d&lPENGATURAN\n\n&0Atur Never Alone, request, volunteer, tracker, compass, Buddy TP, suara, dan DND dari menu Settings.");
@@ -166,7 +166,7 @@ public final class GuiManager {
         if (title.equals(Text.color(plugin.getGuiConfig().getString("main.title", "FRIENDFY - CARI TEMAN")))) {
             event.setCancelled(true); int slot = event.getRawSlot();
             if (slot == plugin.getGuiConfig().getInt("main.quick-match-slot",11)) { p.closeInventory(); plugin.getMatchmaking().enqueue(p, Activity.QUICK); }
-            else if (slot == plugin.getGuiConfig().getInt("main.group-slot",10) && plugin.getSessions().hasSession(p.getUniqueId())) openGroup(p);
+            else if (slot == plugin.getGuiConfig().getInt("main.group-slot",9) && plugin.getSessions().hasSession(p.getUniqueId())) openGroup(p);
             else if (slot == plugin.getGuiConfig().getInt("main.activity-slot",13)) openActivities(p);
             else if (slot == plugin.getGuiConfig().getInt("main.settings-slot",15)) openSettings(p);
             else if (slot == plugin.getGuiConfig().getInt("main.volunteer-slot",17)) { PlayerSettings s=plugin.settings(p.getUniqueId()); s.volunteer=!s.volunteer; plugin.saveSettings(p.getUniqueId()); openMain(p); }

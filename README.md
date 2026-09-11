@@ -1,11 +1,11 @@
-# Friendfy 1.2.0
+# Friendfy 1.2.1
 
 Plugin matchmaking teman untuk Paper 1.21.11+, Java Edition dan Bedrock melalui Geyser/Floodgate.
 
 ## Instalasi
 
 1. Gunakan Java 21 untuk menjalankan Paper 1.21.11.
-2. Hapus JAR Friendfy/JustFriend versi lama, lalu masukkan `Friendfy-1.2.0.jar` ke folder `plugins`.
+2. Hapus JAR Friendfy/JustFriend versi lama, lalu masukkan `Friendfy-1.2.1.jar` ke folder `plugins`.
 3. BetterTeams 5.0.0, Marry2026 2.0.0, BetterRTP 3.6.13, Floodgate, Citizens, PlaceholderAPI, WorldGuard, dan GriefPrevention bersifat opsional.
 4. Restart server. Jangan memakai `/reload` Bukkit.
 5. World Survival dideteksi otomatis. Radius RTP, NPC ID, message, dan GUI tetap dapat diubah dalam folder `plugins/Friendfy/` jika diperlukan.
@@ -65,7 +65,7 @@ SafeRTP tidak membuat chunk baru bila `safe-rtp.require-generated-chunk: true`. 
 
 ## Grup Buddy
 
-Menu Grup baru muncul pada slot kiri Compass di GUI utama setelah dua pemain saling accept dan Buddy Session berhasil dimulai. Setiap anggota dapat mengundang pemain online yang tersedia melalui GUI. Undangan memakai GUI Accept/Decline untuk Java dan Bedrock, kapasitas dikunci maksimal 4 pemain, dan anggota baru diteleport secara aman ke dekat grup. Data anggota serta ketua disimpan di SQLite/MariaDB dan dipulihkan setelah restart.
+Menu Grup baru muncul di slot 9 paling kiri pada GUI utama setelah dua pemain saling accept dan Buddy Session berhasil dimulai. Slot 10 dibiarkan kosong sebelum Compass di slot 11, sehingga jarak setiap menu tetap rapi. Setiap anggota dapat mengundang pemain online yang tersedia melalui GUI. Undangan memakai GUI Accept/Decline untuk Java dan Bedrock, kapasitas dikunci maksimal 4 pemain, dan anggota baru diteleport secara aman ke dekat grup. Data anggota serta ketua disimpan di SQLite/MariaDB dan dipulihkan setelah restart.
 
 Buku Panduan berada di slot kanan Clock pada GUI utama. Buku dibuka langsung melalui antarmuka Minecraft dan tidak dimasukkan ke inventory pemain.
 

@@ -1,5 +1,5 @@
 name: Friendfy
-version: 1.2.0
+version: 1.2.1
 main: id.valoria.justfriend.JustFriendPlugin
 api-version: '1.21'
 authors: [ValoriaSMP]
